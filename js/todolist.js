@@ -4,20 +4,36 @@
           const todoAddForm = document.getElementById("todo-add")
           const ul = document.getElementById("todo-list")
           const lis = ul.getElementsByTagName("li")
+          //estrutura dos dados
+          let arrTasks = getSavedData()
+          setNewData()
           
          
-         //estrutura dos dados
-         let arrTasks = [
-               {
-                    name:"task 1",
-                    createAt: Date.now(),
-                    completed: false
-               }
-          ]
+          function getSavedData() {
+               let tasksData = localStorage.getItem("task")
+               tasksData = JSON.parse(tasksData)
+        
+               return tasksData && tasksData.length ? tasksData : [
+                   {
+                       name: "task 1",
+                       createAt: Date.now(),
+                       completed: true
+                   },
+                   {
+                       name: "task 2",
+                       createAt: Date.now(),
+                       completed: false
+                   }
+               ]
+        
+        
+           }
+
           
-          
-          
-          
+          function setNewData(){
+               localStorage.setItem("task",JSON.stringify(arrTasks))
+          }
+          setNewData()
           
           //não faz nada no momento 
           // function addEventli (li){
@@ -99,7 +115,7 @@
                     createAt: Date.now(),
                     completed: true
                })   
-               
+               setNewData()
                
           }
           
@@ -137,12 +153,14 @@
                     deleteButton : function(){
                          arrTasks.splice(currentLiIndex,1)
                         // currentLi.parentElement.removeChild(currentLi)
-                         renderTasks()
+                        setNewData() 
+                        renderTasks()
                     },
                     containerEditButton: function(){
                          const val = currentLi.querySelector(".editInput").value
                          arrTasks[currentLiIndex].name = val
                          renderTasks()
+                         setNewData()
                     },
                     containerCancelButton: function(){
                          currentLi.querySelector(".editContainer").removeAttribute("style")
@@ -155,8 +173,9 @@
                               currentLi.querySelector(".fa-check").classList.add("displayNone")
                          }
                     }
+                    
                }
-               
+               setNewData()
                if(actions[dataAction]){
                     actions[dataAction]()
                }
